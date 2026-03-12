@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cflow-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: cflow
+      POSTGRES_PASSWORD: cflow_secret
+      POSTGRES_DB: cflow
+    ports:
+      - "0.0.0.0:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cflow -d cflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: cflow-backend
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:3001:3000"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: cflow
+      DB_PASSWORD: cflow_secret
+      DB_NAME: cflow
+      FRONTEND_URL: http://localhost:4201
+      CORS_ORIGINS: "*"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: cflow-frontend
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:4201:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
