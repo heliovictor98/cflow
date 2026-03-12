@@ -1,0 +1,100 @@
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .login-header {
+    flex-direction: row;
+    align-items: center;
+    padding: 24px 24px 20px;
+    gap: 16px;
+  }
+
+  .login-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--cflow-primary);
+    flex-shrink: 0;
+  }
+
+  .login-title-block {
+    min-width: 0;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .login-subtitle {
+    margin-top: 2px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .login-content {
+    padding: 24px;
+  }
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+mat-form-field {
+  margin-bottom: 4px;
+  display: block;
+}
+
+.submit-btn {
+  margin-top: 16px;
+  height: 44px;
+
+  .submit-btn-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .submit-btn-content mat-icon {
+    margin-right: 0;
+  }
+}
+
+/* Cor bege no botão Entrar (sobrescreve tema) */
+:host ::ng-deep .cflow-primary-btn {
+  background-color: var(--cflow-primary) !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .cflow-primary-btn .mat-mdc-button-persistent-ripple::before {
+  background-color: var(--cflow-primary) !important;
+}
+
+:host ::ng-deep .cflow-primary-btn:hover:not([disabled]) {
+  background-color: var(--cflow-primary) !important;
+  filter: brightness(0.95);
+  color: #fff !important;
+}
+
+.error-msg {
+  color: var(--mat-form-field-error-text-color, #b71c1c);
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+}
+
+button mat-spinner {
+  margin: 0 auto;
+}

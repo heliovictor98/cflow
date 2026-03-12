@@ -1,21 +1,6 @@
-@use '@angular/material' as mat;
-
-@include mat.core();
-
-$frontend-primary: mat.m2-define-palette(mat.$m2-indigo-palette);
-$frontend-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
-$frontend-warn: mat.m2-define-palette(mat.$m2-red-palette);
-$frontend-theme: mat.m2-define-light-theme(
-  (
-    color: (
-      primary: $frontend-primary,
-      accent: $frontend-accent,
-      warn: $frontend-warn,
-    ),
-  )
-);
-
-@include mat.all-component-themes($frontend-theme);
+:root {
+  --cflow-primary: #8f735e;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -28,8 +13,47 @@ html, body {
 
 body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: #fafafa;
 }
 
 .app-root {
   min-height: 100%;
+}
+
+/* Botões primários e toolbar com a cor CFlow */
+.mat-mdc-flat-button.mat-primary,
+.mat-mdc-raised-button.mat-primary {
+  --mdc-filled-button-container-color: var(--cflow-primary) !important;
+  --mdc-filled-button-label-text-color: #fff !important;
+  background-color: var(--cflow-primary) !important;
+}
+
+.mat-mdc-flat-button.mat-primary:hover,
+.mat-mdc-raised-button.mat-primary:hover {
+  --mdc-filled-button-hover-container-color: var(--cflow-primary) !important;
+  background-color: var(--cflow-primary) !important;
+  filter: brightness(0.95);
+}
+
+/* Botão Entrar na tela de login (reforço de especificidade) */
+.login-card .mat-mdc-flat-button.mat-primary,
+.login-card .mat-mdc-raised-button.mat-primary {
+  --mdc-filled-button-container-color: var(--cflow-primary) !important;
+  background-color: var(--cflow-primary) !important;
+}
+
+/* Inputs (mat-form-field outline) em foco com a cor CFlow */
+.mat-mdc-form-field.mat-focused {
+  --mdc-outlined-text-field-focus-outline-color: var(--cflow-primary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--cflow-primary);
+}
+
+.mat-mdc-form-field .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field .mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: var(--cflow-primary) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-floating-label.mdc-floating-label--float-above {
+  color: var(--cflow-primary) !important;
 }

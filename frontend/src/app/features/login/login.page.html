@@ -1,0 +1,50 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header class="login-header">
+      <mat-icon class="login-icon">business</mat-icon>
+      <div class="login-title-block">
+        <mat-card-title class="login-title">CFlow</mat-card-title>
+        <mat-card-subtitle class="login-subtitle">Entre com seu usuário e senha</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="login-content">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuário</mat-label>
+          <input matInput formControlName="username" autocomplete="username" />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (form.get('username')?.hasError('required') && form.get('username')?.touched) {
+            <mat-error>Informe o usuário</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="password" autocomplete="current-password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+            <mat-error>Informe a senha</mat-error>
+          }
+        </mat-form-field>
+        @if (error) {
+          <p class="error-msg">{{ error }}</p>
+        }
+        <button
+          mat-flat-button
+          type="submit"
+          class="full-width submit-btn cflow-primary-btn"
+          [disabled]="form.invalid || loading"
+        >
+          @if (loading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            <span class="submit-btn-content">
+              <mat-icon>login</mat-icon>
+              Entrar
+            </span>
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
