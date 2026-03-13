@@ -1,0 +1,49 @@
+.unidades-page mat-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  mat-card-title {
+    margin: 0;
+  }
+
+  button.cflow-primary-btn {
+    mat-icon {
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+  }
+}
+
+:host ::ng-deep .cflow-primary-btn {
+  background-color: var(--cflow-primary) !important;
+  color: #fff !important;
+}
+
+.unidades-table {
+  width: 100%;
+}
+
+.status-ok {
+  color: #2e7d32;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.status-pendente {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.875rem;
+}
+
+.empty-state {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 24px;
+}

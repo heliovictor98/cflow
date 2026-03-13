@@ -9,9 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const typeorm_1 = require("@nestjs/typeorm");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
+const admin_guard_1 = require("./auth/guards/admin.guard");
+const unidade_module_1 = require("./unidades/unidade.module");
+const usuario_module_1 = require("./usuarios/usuario.module");
+const notificacao_module_1 = require("./notificacoes/notificacao.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -19,10 +24,23 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'postgres',
+                host: process.env.DB_HOST ?? 'localhost',
+                port: parseInt(process.env.DB_PORT ?? '5432', 10),
+                username: process.env.DB_USER ?? 'cflow',
+                password: process.env.DB_PASSWORD ?? 'cflow_secret',
+                database: process.env.DB_NAME ?? 'cflow',
+                autoLoadEntities: true,
+                synchronize: process.env.NODE_ENV !== 'production',
+            }),
             auth_module_1.AuthModule,
+            unidade_module_1.UnidadeModule,
+            usuario_module_1.UsuarioModule,
+            notificacao_module_1.NotificacaoModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, admin_guard_1.AdminGuard],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

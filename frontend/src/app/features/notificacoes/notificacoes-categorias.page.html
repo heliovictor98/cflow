@@ -1,0 +1,39 @@
+<div class="notificacoes-page">
+  <div class="page-header">
+    <h1 class="page-title">Notificações</h1>
+    <p class="page-subtitle">Escolha a categoria da sua solicitação</p>
+  </div>
+
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pesquise aqui</mat-label>
+      <input matInput [(ngModel)]="filtro" placeholder="Pesquise aqui" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  @if (loading) {
+    <p class="loading">Carregando...</p>
+  } @else {
+    <div class="cards-grid">
+      @for (cat of categoriasFiltradas; track cat.id) {
+        <a [routerLink]="['/notificacoes', 'categoria', cat.id]" class="card-link" mat-ripple>
+          <mat-card class="option-card">
+            <mat-card-content class="card-content">
+              <div class="card-icon">
+                <mat-icon>{{ cat.icone }}</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">{{ cat.nome }}</h3>
+                <p class="card-subtitle">{{ cat.descricao || cat.nome }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </a>
+      }
+    </div>
+    @if (categoriasFiltradas.length === 0) {
+      <p class="empty-state">Nenhuma categoria encontrada.</p>
+    }
+  }
+</div>

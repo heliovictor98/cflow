@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar unidade' : 'Nova unidade' }}</h2>
+<mat-dialog-content>
+  <p class="hint">Login será gerado automaticamente.</p>
+  <p>(ex: bloco 1 + ap 101 = 1101)</p>
+  <form [formGroup]="form" id="unidade-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Bloco</mat-label>
+      <input matInput formControlName="bloco" />
+      @if (form.get('bloco')?.hasError('required') && form.get('bloco')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apartamento</mat-label>
+      <input matInput formControlName="apartamento" />
+      @if (form.get('apartamento')?.hasError('required') && form.get('apartamento')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do morador responsável</mat-label>
+      <input matInput formControlName="nomeMoradorResponsavel" />
+      @if (form.get('nomeMoradorResponsavel')?.hasError('required') && form.get('nomeMoradorResponsavel')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contato</mat-label>
+      <input matInput formControlName="contato" appPhoneMask type="tel" placeholder="(00) 00000-0000" />
+    </mat-form-field>
+  </form>
+  @if (error) {
+    <p class="error-msg">{{ error }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="cflow-primary-btn"
+    form="unidade-form"
+    [disabled]="form.invalid || loading"
+    (click)="onSubmit()"
+  >
+    {{ isEdit ? 'Salvar' : 'Cadastrar' }}
+  </button>
+</mat-dialog-actions>

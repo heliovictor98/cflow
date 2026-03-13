@@ -1,0 +1,62 @@
+.definir-senha-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.definir-senha-card {
+  max-width: 400px;
+  width: 100%;
+
+  mat-card-header {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 24px 24px 16px;
+  }
+
+  .header-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--cflow-primary);
+  }
+
+  .header-text mat-card-title {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .header-text mat-card-subtitle {
+    margin-top: 4px;
+  }
+
+  mat-card-content {
+    padding: 0 24px 24px;
+  }
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+mat-form-field {
+  margin-bottom: 4px;
+  display: block;
+}
+
+.error-msg {
+  color: var(--mat-form-field-error-text-color, #b71c1c);
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .cflow-primary-btn {
+  background-color: var(--cflow-primary) !important;
+  color: #fff !important;
+  margin-top: 16px;
+}

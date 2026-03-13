@@ -1,0 +1,26 @@
+.hint {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.full-width {
+  width: 100%;
+  display: block;
+}
+
+mat-form-field {
+  margin-bottom: 4px;
+  display: block;
+}
+
+.error-msg {
+  color: var(--mat-form-field-error-text-color, #b71c1c);
+  margin: 8px 0 0;
+  font-size: 0.875rem;
+}
+
+:host ::ng-deep .cflow-primary-btn {
+  background-color: var(--cflow-primary) !important;
+  color: #fff !important;
+}

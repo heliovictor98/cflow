@@ -16,6 +16,7 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const login_dto_1 = require("./dto/login.dto");
+const set_password_dto_1 = require("./dto/set-password.dto");
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -23,6 +24,9 @@ let AuthController = class AuthController {
     }
     login(dto) {
         return this.authService.login(dto);
+    }
+    setPassword(dto) {
+        return this.authService.setPassword(dto);
     }
 };
 exports.AuthController = AuthController;
@@ -33,6 +37,13 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('set-password'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [set_password_dto_1.SetPasswordDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "setPassword", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

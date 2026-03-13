@@ -49,6 +49,68 @@
   flex: 1 1 auto;
 }
 
+.toolbar-user {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .user-icon {
+    color: #fff;
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.25;
+  }
+
+  .user-name {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .user-profile {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.75rem;
+  }
+}
+
+.btn-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  border: 1px solid #fff;
+  background-color: var(--cflow-primary);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
 .main-content {
   flex: 1;
   padding: 24px;

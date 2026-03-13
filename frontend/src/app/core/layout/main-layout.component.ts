@@ -28,6 +28,18 @@ export class MainLayoutComponent {
 
   constructor(private auth: AuthService) {}
 
+  isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
+
+  displayNameUpper(): string {
+    return this.auth.getDisplayName().toUpperCase();
+  }
+
+  profileUpper(): string {
+    return this.auth.getProfile().toUpperCase();
+  }
+
   get isHandset(): boolean {
     return typeof window !== 'undefined' && window.innerWidth < 600;
   }

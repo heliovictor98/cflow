@@ -1,0 +1,92 @@
+<div class="notificacao-nova-page">
+  <nav class="breadcrumb">
+    <a routerLink="/notificacoes" class="breadcrumb-link">Notificações</a>
+    @if (subcategoria?.categoria) {
+      <span class="breadcrumb-sep">/</span>
+      <a
+        [routerLink]="['/notificacoes', 'categoria', categoriaId]"
+        class="breadcrumb-link"
+      >
+        {{ subcategoria?.categoria?.nome }}
+      </a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">{{ subcategoria?.nome }}</span>
+    }
+  </nav>
+
+  @if (loading) {
+    <p class="loading">Carregando...</p>
+  } @else if (protocolo) {
+    <mat-card class="success-card">
+      <mat-card-header>
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <mat-card-title>Notificação registrada</mat-card-title>
+        <mat-card-subtitle>Anote seu número de protocolo</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="protocolo-label">Protocolo</p>
+        <p class="protocolo-numero">{{ protocolo }}</p>
+        <div class="actions">
+          <button mat-flat-button color="primary" (click)="novaNotificacao()">
+            Nova notificação
+          </button>
+          <button mat-button routerLink="/notificacoes">Voltar</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  } @else if (subcategoria) {
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>{{ subcategoria.nome }}</mat-card-title>
+        <mat-card-subtitle>{{ subcategoria.categoria?.nome }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          @if (isBarulho) {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Horário que aconteceu</mat-label>
+              <input matInput formControlName="horarioOcorrencia" placeholder="Ex.: 22h30" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Descrição</mat-label>
+              <textarea matInput formControlName="descricao" rows="3" placeholder="Descreva o ocorrido"></textarea>
+            </mat-form-field>
+          }
+          @if (isManutencao) {
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Quantos dias está o problema?</mat-label>
+              <input matInput type="number" formControlName="diasProblema" min="0" placeholder="Ex.: 3" />
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Detalhe</mat-label>
+              <textarea matInput formControlName="detalhe" rows="3" placeholder="Descreva o problema"></textarea>
+            </mat-form-field>
+          }
+          @if (!isBarulho && !isManutencao) {
+            <p class="hint">Preencha os dados e envie.</p>
+          }
+
+          @if (errorMessage) {
+            <p class="error-msg">{{ errorMessage }}</p>
+          }
+
+          <div class="form-actions">
+            <button mat-flat-button color="primary" type="submit" [disabled]="submitting">
+              {{ submitting ? 'Enviando...' : 'Enviar e gerar protocolo' }}
+            </button>
+            <button mat-button type="button" routerLink="/notificacoes">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  } @else if (errorMessage) {
+    <mat-card>
+      <mat-card-content>
+        <p class="error-msg">{{ errorMessage }}</p>
+        <button mat-button routerLink="/notificacoes">Voltar às categorias</button>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

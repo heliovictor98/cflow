@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Editar usuário' : 'Novo usuário' }}</h2>
+<mat-dialog-content>
+  <p class="hint">Senha será definida no primeiro acesso do usuário.</p>
+  <form [formGroup]="form" id="usuario-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome completo</mat-label>
+      <input matInput formControlName="nomeCompleto" />
+      @if (form.get('nomeCompleto')?.hasError('required') && form.get('nomeCompleto')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Perfil</mat-label>
+      <mat-select formControlName="perfil">
+        @for (p of perfis; track p) {
+          <mat-option [value]="p">{{ perfilLabels[p] }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Login</mat-label>
+      <input matInput formControlName="login" />
+      @if (form.get('login')?.hasError('required') && form.get('login')?.touched) {
+        <mat-error>Obrigatório</mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contato</mat-label>
+      <input matInput formControlName="contato" appPhoneMask type="tel" placeholder="(00) 00000-0000" />
+    </mat-form-field>
+  </form>
+  @if (error) {
+    <p class="error-msg">{{ error }}</p>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button
+    mat-flat-button
+    class="cflow-primary-btn"
+    form="usuario-form"
+    [disabled]="form.invalid || loading"
+    (click)="onSubmit()"
+  >
+    {{ isEdit ? 'Salvar' : 'Cadastrar' }}
+  </button>
+</mat-dialog-actions>

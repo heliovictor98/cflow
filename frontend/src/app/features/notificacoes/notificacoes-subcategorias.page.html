@@ -1,0 +1,51 @@
+<div class="notificacoes-page">
+  <nav class="breadcrumb">
+    <a routerLink="/notificacoes" class="breadcrumb-link">Notificações</a>
+    @if (categoria) {
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">{{ categoria.nome }}</span>
+    }
+  </nav>
+
+  <div class="page-header">
+    <h1 class="page-title">{{ categoria?.nome ?? 'Carregando...' }}</h1>
+    <p class="page-subtitle">{{ categoria?.descricao || 'Escolha a subcategoria' }}</p>
+  </div>
+
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pesquise aqui</mat-label>
+      <input matInput [(ngModel)]="filtro" placeholder="Pesquise aqui" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  @if (loading) {
+    <p class="loading">Carregando...</p>
+  } @else {
+    <div class="cards-grid">
+      @for (sub of subcategoriasFiltradas; track sub.id) {
+        <a
+          [routerLink]="['/notificacoes', 'categoria', categoriaId, 'subcategoria', sub.id, 'novo']"
+          class="card-link"
+          mat-ripple
+        >
+          <mat-card class="option-card">
+            <mat-card-content class="card-content">
+              <div class="card-icon">
+                <mat-icon>{{ sub.icone }}</mat-icon>
+              </div>
+              <div class="card-text">
+                <h3 class="card-title">{{ sub.nome }}</h3>
+                <p class="card-subtitle">{{ categoria?.nome }}</p>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </a>
+      }
+    </div>
+    @if (subcategoriasFiltradas.length === 0 && !loading) {
+      <p class="empty-state">Nenhuma subcategoria encontrada.</p>
+    }
+  }
+</div>

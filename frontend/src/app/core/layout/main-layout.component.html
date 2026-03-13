@@ -15,6 +15,20 @@
         <mat-icon matListItemIcon>home</mat-icon>
         <span matListItemTitle>Início</span>
       </a>
+      <a mat-list-item routerLink="/notificacoes" routerLinkActive="active" (click)="closeSidenavIfHandset()">
+        <mat-icon matListItemIcon>notifications_active</mat-icon>
+        <span matListItemTitle>Notificações</span>
+      </a>
+      @if (isAdmin()) {
+        <a mat-list-item routerLink="/unidades" routerLinkActive="active" (click)="closeSidenavIfHandset()">
+          <mat-icon matListItemIcon>apartment</mat-icon>
+          <span matListItemTitle>Unidades</span>
+        </a>
+        <a mat-list-item routerLink="/usuarios" routerLinkActive="active" (click)="closeSidenavIfHandset()">
+          <mat-icon matListItemIcon>people</mat-icon>
+          <span matListItemTitle>Operacional</span>
+        </a>
+      }
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content class="layout-content">
@@ -24,9 +38,19 @@
       </button>
       <span class="toolbar-title">CFlow</span>
       <span class="spacer"></span>
-      <button mat-icon-button (click)="logout()" aria-label="Sair">
-        <mat-icon>logout</mat-icon>
-      </button>
+      <div class="toolbar-user">
+        <div class="user-info">
+          <mat-icon class="user-icon">account_circle</mat-icon>
+          <div class="user-text">
+            <span class="user-name">{{ displayNameUpper() }}</span>
+            <span class="user-profile">{{ profileUpper() }}</span>
+          </div>
+        </div>
+        <button class="btn-sair" (click)="logout()" type="button">
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </div>
     </mat-toolbar>
     <main class="main-content">
       <router-outlet></router-outlet>

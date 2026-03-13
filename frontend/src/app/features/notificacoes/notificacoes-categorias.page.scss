@@ -1,0 +1,114 @@
+.notificacoes-page {
+  max-width: 960px;
+}
+
+.page-header {
+  margin-bottom: 24px;
+
+  .page-title {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .page-subtitle {
+    margin: 0;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.95rem;
+  }
+}
+
+.search-bar {
+  margin-bottom: 24px;
+
+  .search-field {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.loading,
+.empty-state {
+  color: rgba(0, 0, 0, 0.6);
+  margin: 24px 0;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Sombra no wrapper para os dois cards terem o mesmo acabamento */
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow:
+    0 2px 4px -1px rgba(0, 0, 0, 0.08),
+    0 4px 8px 0 rgba(0, 0, 0, 0.06),
+    0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s;
+}
+
+.card-link:hover {
+  box-shadow:
+    0 4px 8px -2px rgba(0, 0, 0, 0.1),
+    0 8px 16px 0 rgba(0, 0, 0, 0.08),
+    0 2px 6px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Card sem borda nem sombra – um só contorno (sombra do .card-link) */
+mat-card.option-card {
+  cursor: pointer;
+  border: none !important;
+  outline: none !important;
+  border-radius: 8px;
+  box-shadow: none !important;
+  background-color: #fafafa;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px !important;
+}
+
+/* Caixa do ícone: cinza escuro com ícone branco (como na referência) */
+.card-icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  background: #616161;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: #fff;
+  }
+}
+
+.card-text {
+  min-width: 0;
+}
+
+.card-title {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 1.35;
+}

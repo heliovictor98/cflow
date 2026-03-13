@@ -35,18 +35,17 @@ export class LoginPage {
 
   form = this.fb.nonNullable.group({
     username: ['', Validators.required],
-    password: ['', Validators.required],
+    password: [''], // Opcional no primeiro acesso (unidade sem senha definida)
   });
   loading = false;
   error = '';
 
   onSubmit(): void {
-    if (this.form.invalid) return;
+    if (this.form.get('username')?.invalid) return;
     this.error = '';
     this.loading = true;
     const { username, password } = this.form.getRawValue();
-    this.auth.login(username, password).subscribe({
-      next: () => this.router.navigate(['/home']),
+    this.auth.login(username, password ?? '').subscribe({
       error: (err) => {
         this.loading = false;
         this.error = err.error?.message ?? 'Falha no login. Tente novamente.';

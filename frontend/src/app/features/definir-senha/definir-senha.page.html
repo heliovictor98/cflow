@@ -1,0 +1,49 @@
+<div class="definir-senha-container">
+  <mat-card class="definir-senha-card">
+    <mat-card-header>
+      <mat-icon class="header-icon">lock_reset</mat-icon>
+      <div class="header-text">
+        <mat-card-title>Definir sua senha</mat-card-title>
+        <mat-card-subtitle>Primeiro acesso: crie uma senha para acessar o sistema</mat-card-subtitle>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nova senha</mat-label>
+          <input matInput type="password" formControlName="newPassword" autocomplete="new-password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (form.get('newPassword')?.hasError('required') && form.get('newPassword')?.touched) {
+            <mat-error>Informe a nova senha</mat-error>
+          }
+          @if (form.get('newPassword')?.hasError('minlength')) {
+            <mat-error>Mínimo 6 caracteres</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmar senha</mat-label>
+          <input matInput type="password" formControlName="confirmPassword" autocomplete="new-password" />
+          <mat-icon matPrefix>lock</mat-icon>
+          @if (form.hasError('mismatch') && form.get('confirmPassword')?.touched) {
+            <mat-error>As senhas não coincidem</mat-error>
+          }
+        </mat-form-field>
+        @if (error) {
+          <p class="error-msg">{{ error }}</p>
+        }
+        <button
+          mat-flat-button
+          type="submit"
+          class="full-width cflow-primary-btn"
+          [disabled]="form.invalid || loading"
+        >
+          @if (loading) {
+            <mat-spinner diameter="24"></mat-spinner>
+          } @else {
+            Definir senha
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
