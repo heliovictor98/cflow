@@ -19,14 +19,17 @@ const typeorm_2 = require("typeorm");
 const categoria_entity_1 = require("./entities/categoria.entity");
 const subcategoria_entity_1 = require("./entities/subcategoria.entity");
 const notificacao_entity_1 = require("./entities/notificacao.entity");
+const notificacao_historico_entity_1 = require("./entities/notificacao-historico.entity");
 let NotificacaoService = class NotificacaoService {
     categoriaRepo;
     subcategoriaRepo;
     notificacaoRepo;
-    constructor(categoriaRepo, subcategoriaRepo, notificacaoRepo) {
+    historicoRepo;
+    constructor(categoriaRepo, subcategoriaRepo, notificacaoRepo, historicoRepo) {
         this.categoriaRepo = categoriaRepo;
         this.subcategoriaRepo = subcategoriaRepo;
         this.notificacaoRepo = notificacaoRepo;
+        this.historicoRepo = historicoRepo;
     }
     async findAllCategorias() {
         return this.categoriaRepo.find({
@@ -74,7 +77,57 @@ let NotificacaoService = class NotificacaoService {
             status: 'ABERTO',
             dadosComplementares: (dto.dadosComplementares ?? null),
         });
-        return this.notificacaoRepo.save(notificacao);
+        const saved = await this.notificacaoRepo.save(notificacao);
+        await this.historicoRepo.save({
+            notificacaoId: saved.id,
+            tipo: 'CRIACAO',
+            autorUnidadeId: unidadeId,
+            autorUsuarioId: null,
+            texto: null,
+        });
+        return saved;
+    }
+    async findOne(id) {
+        const notificacao = await this.notificacaoRepo.findOne({
+            where: { id },
+            relations: ['subcategoria', 'subcategoria.categoria', 'unidade'],
+        });
+        if (!notificacao)
+            throw new common_1.NotFoundException('Chamado não encontrado.');
+        return notificacao;
+    }
+    async listHistorico(notificacaoId) {
+        return this.historicoRepo.find({
+            where: { notificacaoId },
+            relations: ['autorUnidade', 'autorUsuario'],
+            order: { createdAt: 'ASC' },
+        });
+    }
+    async addComentario(notificacaoId, texto, usuarioId) {
+        await this.findOne(notificacaoId);
+        return this.historicoRepo.save({
+            notificacaoId,
+            tipo: 'COMENTARIO',
+            autorUnidadeId: null,
+            autorUsuarioId: usuarioId && usuarioId > 0 ? usuarioId : null,
+            texto: texto?.trim() || null,
+        });
+    }
+    async encerrar(notificacaoId, texto, usuarioId) {
+        const notificacao = await this.findOne(notificacaoId);
+        if (notificacao.status === 'ENCERRADO') {
+            throw new common_1.BadRequestException('Este chamado já está encerrado.');
+        }
+        notificacao.status = 'ENCERRADO';
+        await this.notificacaoRepo.save(notificacao);
+        await this.historicoRepo.save({
+            notificacaoId,
+            tipo: 'ENCERRAMENTO',
+            autorUnidadeId: null,
+            autorUsuarioId: usuarioId && usuarioId > 0 ? usuarioId : null,
+            texto: texto?.trim() || null,
+        });
+        return this.findOne(notificacaoId);
     }
     async findAllByUnidade(unidadeId) {
         return this.notificacaoRepo.find({
@@ -96,7 +149,9 @@ exports.NotificacaoService = NotificacaoService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(categoria_entity_1.Categoria)),
     __param(1, (0, typeorm_1.InjectRepository)(subcategoria_entity_1.Subcategoria)),
     __param(2, (0, typeorm_1.InjectRepository)(notificacao_entity_1.Notificacao)),
+    __param(3, (0, typeorm_1.InjectRepository)(notificacao_historico_entity_1.NotificacaoHistorico)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository])
 ], NotificacaoService);

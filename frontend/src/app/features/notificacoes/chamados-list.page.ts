@@ -5,8 +5,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { NotificacoesService, Notificacao } from '../../core/services/notificacoes.service';
 import { AuthService } from '../../core/auth.service';
+import { HistoricoChamadoDialogComponent } from './historico-chamado.dialog';
 
 /** Garante camelCase na resposta (backend pode vir em snake_case). */
 function normalizarNotificacao(item: Record<string, unknown>): Notificacao {
@@ -34,6 +36,7 @@ function normalizarNotificacao(item: Record<string, unknown>): Notificacao {
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
   ],
   templateUrl: './chamados-list.page.html',
   styleUrl: './chamados-list.page.scss',
@@ -42,6 +45,7 @@ export class ChamadosListPage implements OnInit {
   private notificacoesService = inject(NotificacoesService);
   private auth = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
+  private dialog = inject(MatDialog);
 
   dataSource = new MatTableDataSource<Notificacao>([]);
   displayedColumns: string[] = [];
@@ -54,9 +58,20 @@ export class ChamadosListPage implements OnInit {
 
   ngOnInit(): void {
     this.displayedColumns = this.isAdmin
-      ? ['protocolo', 'unidade', 'categoria', 'subcategoria', 'status', 'data']
-      : ['protocolo', 'categoria', 'subcategoria', 'status', 'data'];
+      ? ['protocolo', 'unidade', 'categoria', 'subcategoria', 'status', 'data', 'acoes']
+      : ['protocolo', 'categoria', 'subcategoria', 'status', 'data', 'acoes'];
     this.load();
+  }
+
+  openHistorico(row: Notificacao): void {
+    const ref = this.dialog.open(HistoricoChamadoDialogComponent, {
+      width: '560px',
+      maxHeight: '90vh',
+      data: { notificacao: row, isAdmin: this.isAdmin },
+    });
+    ref.afterClosed().subscribe((atualizar) => {
+      if (atualizar) this.load();
+    });
   }
 
   load(): void {

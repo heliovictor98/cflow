@@ -1,0 +1,109 @@
+.historico-content {
+  min-width: 400px;
+  max-width: 560px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.timeline {
+  padding: 8px 0;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  &:last-child .timeline-body {
+    padding-bottom: 0;
+  }
+}
+
+.timeline-marker {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #9e9e9e;
+  margin-top: 4px;
+
+  &.marker-criacao {
+    background: #1976d2;
+  }
+
+  &.marker-comentario {
+    background: #2e7d32;
+  }
+
+  &.marker-encerramento {
+    background: #c62828;
+  }
+}
+
+.timeline-body {
+  flex: 1;
+  padding-bottom: 8px;
+  border-left: 2px solid #e0e0e0;
+  margin-left: 4px;
+  padding-left: 12px;
+}
+
+.timeline-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+
+  .tipo {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .autor {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 0.85rem;
+  }
+
+  .data {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.8rem;
+  }
+}
+
+.timeline-texto {
+  margin: 0 0 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.acoes-admin {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+
+  .full-width {
+    width: 100%;
+    display: block;
+  }
+
+  .botoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .encerrar-field {
+    flex: 1;
+    min-width: 180px;
+  }
+}
+
+.error-msg {
+  color: #c62828;
+  font-size: 0.85rem;
+  margin: 0 0 8px 0;
+}

@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Histórico — {{ notificacao.numeroProtocolo }}</h2>
+<mat-dialog-content class="historico-content">
+  @if (loading) {
+    <p>Carregando histórico...</p>
+  } @else {
+    <div class="timeline">
+      @for (item of historico; track item.id) {
+        <div class="timeline-item">
+          <div class="timeline-marker" [class.marker-criacao]="item.tipo === 'CRIACAO'" [class.marker-comentario]="item.tipo === 'COMENTARIO'" [class.marker-encerramento]="item.tipo === 'ENCERRAMENTO'"></div>
+          <div class="timeline-body">
+            <div class="timeline-header">
+              <span class="tipo">{{ tipoLabel(item.tipo) }}</span>
+              <span class="autor">{{ autorLabel(item) }}</span>
+              <span class="data">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            @if (item.texto) {
+              <p class="timeline-texto">{{ item.texto }}</p>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    @if (podeComentarOuEncerrar) {
+      <div class="acoes-admin">
+        @if (error) {
+          <p class="error-msg">{{ error }}</p>
+        }
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Comentário (parecer)</mat-label>
+          <textarea matInput [(ngModel)]="comentario" rows="2" placeholder="Digite seu comentário..."></textarea>
+        </mat-form-field>
+        <div class="botoes">
+          <button mat-flat-button color="primary" (click)="addComentario()" [disabled]="submittingComentario || !(comentario && comentario.trim())">
+            {{ submittingComentario ? 'Enviando...' : 'Adicionar comentário' }}
+          </button>
+          <mat-form-field appearance="outline" class="encerrar-field">
+            <mat-label>Comentário ao encerrar (opcional)</mat-label>
+            <input matInput [(ngModel)]="encerrarTexto" placeholder="Motivo do encerramento" />
+          </mat-form-field>
+          <button mat-flat-button color="warn" (click)="encerrar()" [disabled]="submittingEncerrar">
+            {{ submittingEncerrar ? 'Encerrando...' : 'Encerrar chamado' }}
+          </button>
+        </div>
+      </div>
+    }
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="fechar()">Fechar</button>
+</mat-dialog-actions>

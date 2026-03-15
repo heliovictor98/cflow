@@ -80,4 +80,31 @@ export class NotificacoesService {
   listChamados(): Observable<Notificacao[]> {
     return this.http.get<Notificacao[]>(`${API}/chamados`);
   }
+
+  /** Histórico (timeline) do chamado. */
+  getHistorico(notificacaoId: number): Observable<NotificacaoHistorico[]> {
+    return this.http.get<NotificacaoHistorico[]>(`${API}/${notificacaoId}/historico`);
+  }
+
+  /** Admin: adiciona comentário. */
+  addComentario(notificacaoId: number, texto: string): Observable<NotificacaoHistorico> {
+    return this.http.post<NotificacaoHistorico>(`${API}/${notificacaoId}/comentario`, { texto });
+  }
+
+  /** Admin: encerra o chamado (comentário opcional). */
+  encerrar(notificacaoId: number, texto?: string): Observable<Notificacao> {
+    return this.http.post<Notificacao>(`${API}/${notificacaoId}/encerrar`, { texto });
+  }
+}
+
+export interface NotificacaoHistorico {
+  id: number;
+  notificacaoId: number;
+  tipo: 'CRIACAO' | 'COMENTARIO' | 'ENCERRAMENTO';
+  autorUnidadeId: number | null;
+  autorUsuarioId: number | null;
+  texto: string | null;
+  createdAt: string;
+  autorUnidade?: { nomeMoradorResponsavel: string; bloco: string; apartamento: string };
+  autorUsuario?: { nomeCompleto: string };
 }

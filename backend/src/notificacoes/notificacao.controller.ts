@@ -12,6 +12,8 @@ import {
 import type { Request } from 'express';
 import { NotificacaoService } from './notificacao.service';
 import { CreateNotificacaoDto } from './dto/create-notificacao.dto';
+import { ComentarioDto } from './dto/comentario.dto';
+import { EncerrarDto } from './dto/encerrar.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UsuarioService } from '../usuarios/usuario.service';
 
@@ -23,6 +25,14 @@ function getUnidadeIdFromRequest(req: Request): number | null {
   const auth = req.headers.authorization;
   const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
   const match = token?.match(new RegExp(`^${UNIDADE_TOKEN_PREFIX}(\\d+)$`));
+  if (!match) return null;
+  return parseInt(match[1], 10);
+}
+
+function getUsuarioIdFromRequest(req: Request): number | null {
+  const auth = req.headers.authorization;
+  const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
+  const match = token?.match(new RegExp(`^${USUARIO_TOKEN_PREFIX}(\\d+)$`));
   if (!match) return null;
   return parseInt(match[1], 10);
 }
@@ -62,6 +72,43 @@ export class NotificacaoController {
       return this.notificacaoService.findAll();
     }
     throw new UnauthorizedException('Acesso negado.');
+  }
+
+  /** Histórico do chamado (timeline). Morador: só seus chamados; Admin: qualquer um. */
+  @Get(':id/historico')
+  async getHistorico(@Param('id', ParseIntPipe) id: number, @Req() req: Request) {
+    const notificacao = await this.notificacaoService.findOne(id);
+    const unidadeId = getUnidadeIdFromRequest(req);
+    if (unidadeId != null) {
+      if (notificacao.unidadeId !== unidadeId) throw new UnauthorizedException('Acesso negado.');
+    } else if (!(await this.isAdmin(req))) {
+      throw new UnauthorizedException('Acesso negado.');
+    }
+    return this.notificacaoService.listHistorico(id);
+  }
+
+  /** Admin: adiciona comentário ao chamado. */
+  @Post(':id/comentario')
+  async addComentario(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: ComentarioDto,
+    @Req() req: Request,
+  ) {
+    if (!(await this.isAdmin(req))) throw new UnauthorizedException('Apenas administradores podem comentar.');
+    const usuarioId = getUsuarioIdFromRequest(req);
+    return this.notificacaoService.addComentario(id, dto.texto, usuarioId);
+  }
+
+  /** Admin: encerra o chamado (com comentário opcional). */
+  @Post(':id/encerrar')
+  async encerrar(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: EncerrarDto,
+    @Req() req: Request,
+  ) {
+    if (!(await this.isAdmin(req))) throw new UnauthorizedException('Apenas administradores podem encerrar.');
+    const usuarioId = getUsuarioIdFromRequest(req);
+    return this.notificacaoService.encerrar(id, dto.texto, usuarioId);
   }
 
   @Get('categorias')

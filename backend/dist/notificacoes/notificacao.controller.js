@@ -16,6 +16,8 @@ exports.NotificacaoController = void 0;
 const common_1 = require("@nestjs/common");
 const notificacao_service_1 = require("./notificacao.service");
 const create_notificacao_dto_1 = require("./dto/create-notificacao.dto");
+const comentario_dto_1 = require("./dto/comentario.dto");
+const encerrar_dto_1 = require("./dto/encerrar.dto");
 const auth_guard_1 = require("../auth/guards/auth.guard");
 const usuario_service_1 = require("../usuarios/usuario.service");
 const UNIDADE_TOKEN_PREFIX = 'cflow-unidade-';
@@ -25,6 +27,14 @@ function getUnidadeIdFromRequest(req) {
     const auth = req.headers.authorization;
     const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
     const match = token?.match(new RegExp(`^${UNIDADE_TOKEN_PREFIX}(\\d+)$`));
+    if (!match)
+        return null;
+    return parseInt(match[1], 10);
+}
+function getUsuarioIdFromRequest(req) {
+    const auth = req.headers.authorization;
+    const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
+    const match = token?.match(new RegExp(`^${USUARIO_TOKEN_PREFIX}(\\d+)$`));
     if (!match)
         return null;
     return parseInt(match[1], 10);
@@ -62,6 +72,30 @@ let NotificacaoController = class NotificacaoController {
         }
         throw new common_1.UnauthorizedException('Acesso negado.');
     }
+    async getHistorico(id, req) {
+        const notificacao = await this.notificacaoService.findOne(id);
+        const unidadeId = getUnidadeIdFromRequest(req);
+        if (unidadeId != null) {
+            if (notificacao.unidadeId !== unidadeId)
+                throw new common_1.UnauthorizedException('Acesso negado.');
+        }
+        else if (!(await this.isAdmin(req))) {
+            throw new common_1.UnauthorizedException('Acesso negado.');
+        }
+        return this.notificacaoService.listHistorico(id);
+    }
+    async addComentario(id, dto, req) {
+        if (!(await this.isAdmin(req)))
+            throw new common_1.UnauthorizedException('Apenas administradores podem comentar.');
+        const usuarioId = getUsuarioIdFromRequest(req);
+        return this.notificacaoService.addComentario(id, dto.texto, usuarioId);
+    }
+    async encerrar(id, dto, req) {
+        if (!(await this.isAdmin(req)))
+            throw new common_1.UnauthorizedException('Apenas administradores podem encerrar.');
+        const usuarioId = getUsuarioIdFromRequest(req);
+        return this.notificacaoService.encerrar(id, dto.texto, usuarioId);
+    }
     listCategorias() {
         return this.notificacaoService.findAllCategorias();
     }
@@ -90,6 +124,32 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], NotificacaoController.prototype, "listChamados", null);
+__decorate([
+    (0, common_1.Get)(':id/historico'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], NotificacaoController.prototype, "getHistorico", null);
+__decorate([
+    (0, common_1.Post)(':id/comentario'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, comentario_dto_1.ComentarioDto, Object]),
+    __metadata("design:returntype", Promise)
+], NotificacaoController.prototype, "addComentario", null);
+__decorate([
+    (0, common_1.Post)(':id/encerrar'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, encerrar_dto_1.EncerrarDto, Object]),
+    __metadata("design:returntype", Promise)
+], NotificacaoController.prototype, "encerrar", null);
 __decorate([
     (0, common_1.Get)('categorias'),
     __metadata("design:type", Function),

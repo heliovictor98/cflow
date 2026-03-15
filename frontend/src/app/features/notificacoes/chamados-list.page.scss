@@ -26,6 +26,11 @@
       background: rgba(25, 118, 210, 0.12);
       color: #1565c0;
     }
+
+    &.status-encerrado {
+      background: rgba(198, 40, 40, 0.12);
+      color: #c62828;
+    }
   }
 
   .empty-state {
