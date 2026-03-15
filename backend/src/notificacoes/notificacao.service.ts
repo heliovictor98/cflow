@@ -74,4 +74,21 @@ export class NotificacaoService {
     });
     return this.notificacaoRepo.save(notificacao);
   }
+
+  /** Lista chamados do morador (por unidade) */
+  async findAllByUnidade(unidadeId: number): Promise<Notificacao[]> {
+    return this.notificacaoRepo.find({
+      where: { unidadeId },
+      relations: ['subcategoria', 'subcategoria.categoria'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  /** Lista todos os chamados (para admin) */
+  async findAll(): Promise<Notificacao[]> {
+    return this.notificacaoRepo.find({
+      relations: ['subcategoria', 'subcategoria.categoria', 'unidade'],
+      order: { createdAt: 'DESC' },
+    });
+  }
 }

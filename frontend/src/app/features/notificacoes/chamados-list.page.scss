@@ -1,0 +1,40 @@
+.chamados-page {
+  max-width: 100%;
+
+  mat-card-header {
+    .spacer {
+      flex: 1 1 auto;
+    }
+  }
+
+  .chamados-table {
+    width: 100%;
+  }
+
+  .protocolo-numero {
+    font-family: monospace;
+    font-weight: 500;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+
+    &.status-aberto {
+      background: rgba(25, 118, 210, 0.12);
+      color: #1565c0;
+    }
+  }
+
+  .empty-state {
+    color: rgba(0, 0, 0, 0.6);
+    margin: 24px 0;
+  }
+
+  .error-msg {
+    color: #c62828;
+    margin: 0 0 16px 0;
+  }
+}

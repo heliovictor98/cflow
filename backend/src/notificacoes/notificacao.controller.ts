@@ -13,8 +13,11 @@ import type { Request } from 'express';
 import { NotificacaoService } from './notificacao.service';
 import { CreateNotificacaoDto } from './dto/create-notificacao.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { UsuarioService } from '../usuarios/usuario.service';
 
 const UNIDADE_TOKEN_PREFIX = 'cflow-unidade-';
+const ADMIN_TOKEN = 'cflow-token-adm';
+const USUARIO_TOKEN_PREFIX = 'cflow-usuario-';
 
 function getUnidadeIdFromRequest(req: Request): number | null {
   const auth = req.headers.authorization;
@@ -27,7 +30,39 @@ function getUnidadeIdFromRequest(req: Request): number | null {
 @Controller('notificacoes')
 @UseGuards(AuthGuard)
 export class NotificacaoController {
-  constructor(private readonly notificacaoService: NotificacaoService) {}
+  constructor(
+    private readonly notificacaoService: NotificacaoService,
+    private readonly usuarioService: UsuarioService,
+  ) {}
+
+  private async isAdmin(req: Request): Promise<boolean> {
+    const auth = req.headers.authorization;
+    const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
+    if (token === ADMIN_TOKEN) return true;
+    const match = token?.match(new RegExp(`^${USUARIO_TOKEN_PREFIX}(\\d+)$`));
+    if (match) {
+      try {
+        const usuario = await this.usuarioService.findOne(parseInt(match[1], 10));
+        return usuario.perfil === 'ADM';
+      } catch {
+        // ignore
+      }
+    }
+    return false;
+  }
+
+  /** Morador: seus chamados. Admin: todos. Deve vir antes de rotas com :id para não ser confundido. */
+  @Get('chamados')
+  async listChamados(@Req() req: Request) {
+    const unidadeId = getUnidadeIdFromRequest(req);
+    if (unidadeId != null) {
+      return this.notificacaoService.findAllByUnidade(unidadeId);
+    }
+    if (await this.isAdmin(req)) {
+      return this.notificacaoService.findAll();
+    }
+    throw new UnauthorizedException('Acesso negado.');
+  }
 
   @Get('categorias')
   listCategorias() {

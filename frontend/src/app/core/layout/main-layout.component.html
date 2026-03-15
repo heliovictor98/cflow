@@ -19,6 +19,10 @@
         <mat-icon matListItemIcon>notifications_active</mat-icon>
         <span matListItemTitle>Notificações</span>
       </a>
+      <a mat-list-item routerLink="/notificacoes/chamados" routerLinkActive="active" (click)="closeSidenavIfHandset()">
+        <mat-icon matListItemIcon>assignment</mat-icon>
+        <span matListItemTitle>Chamados</span>
+      </a>
       @if (isAdmin()) {
         <a mat-list-item routerLink="/unidades" routerLinkActive="active" (click)="closeSidenavIfHandset()">
           <mat-icon matListItemIcon>apartment</mat-icon>

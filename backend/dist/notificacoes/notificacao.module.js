@@ -15,6 +15,7 @@ const notificacao_entity_1 = require("./entities/notificacao.entity");
 const notificacao_service_1 = require("./notificacao.service");
 const notificacao_controller_1 = require("./notificacao.controller");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const usuario_module_1 = require("../usuarios/usuario.module");
 let NotificacaoModule = class NotificacaoModule {
 };
 exports.NotificacaoModule = NotificacaoModule;
@@ -22,6 +23,7 @@ exports.NotificacaoModule = NotificacaoModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forFeature([categoria_entity_1.Categoria, subcategoria_entity_1.Subcategoria, notificacao_entity_1.Notificacao]),
+            usuario_module_1.UsuarioModule,
         ],
         controllers: [notificacao_controller_1.NotificacaoController],
         providers: [notificacao_service_1.NotificacaoService, auth_guard_1.AuthGuard],

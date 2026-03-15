@@ -30,6 +30,8 @@ export interface Notificacao {
   dadosComplementares: Record<string, unknown> | null;
   createdAt: string;
   updatedAt: string;
+  subcategoria?: Subcategoria;
+  unidade?: { bloco: string; apartamento: string };
 }
 
 /** Barulho: horarioOcorrencia, descricao. Manutenção: diasProblema, detalhe */
@@ -72,5 +74,10 @@ export class NotificacoesService {
 
   create(dto: CreateNotificacaoDto): Observable<Notificacao> {
     return this.http.post<Notificacao>(API, dto);
+  }
+
+  /** Morador: seus chamados. Admin: todos. */
+  listChamados(): Observable<Notificacao[]> {
+    return this.http.get<Notificacao[]>(`${API}/chamados`);
   }
 }

@@ -76,6 +76,19 @@ let NotificacaoService = class NotificacaoService {
         });
         return this.notificacaoRepo.save(notificacao);
     }
+    async findAllByUnidade(unidadeId) {
+        return this.notificacaoRepo.find({
+            where: { unidadeId },
+            relations: ['subcategoria', 'subcategoria.categoria'],
+            order: { createdAt: 'DESC' },
+        });
+    }
+    async findAll() {
+        return this.notificacaoRepo.find({
+            relations: ['subcategoria', 'subcategoria.categoria', 'unidade'],
+            order: { createdAt: 'DESC' },
+        });
+    }
 };
 exports.NotificacaoService = NotificacaoService;
 exports.NotificacaoService = NotificacaoService = __decorate([

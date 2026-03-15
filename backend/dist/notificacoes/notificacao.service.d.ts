@@ -14,4 +14,6 @@ export declare class NotificacaoService {
     findSubcategoriaById(id: number): Promise<Subcategoria>;
     private gerarNumeroProtocolo;
     create(dto: CreateNotificacaoDto, unidadeId: number): Promise<Notificacao>;
+    findAllByUnidade(unidadeId: number): Promise<Notificacao[]>;
+    findAll(): Promise<Notificacao[]>;
 }

@@ -6,10 +6,12 @@ import { Notificacao } from './entities/notificacao.entity';
 import { NotificacaoService } from './notificacao.service';
 import { NotificacaoController } from './notificacao.controller';
 import { AuthGuard } from '../auth/guards/auth.guard';
+import { UsuarioModule } from '../usuarios/usuario.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Categoria, Subcategoria, Notificacao]),
+    UsuarioModule,
   ],
   controllers: [NotificacaoController],
   providers: [NotificacaoService, AuthGuard],

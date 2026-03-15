@@ -17,7 +17,10 @@ const common_1 = require("@nestjs/common");
 const notificacao_service_1 = require("./notificacao.service");
 const create_notificacao_dto_1 = require("./dto/create-notificacao.dto");
 const auth_guard_1 = require("../auth/guards/auth.guard");
+const usuario_service_1 = require("../usuarios/usuario.service");
 const UNIDADE_TOKEN_PREFIX = 'cflow-unidade-';
+const ADMIN_TOKEN = 'cflow-token-adm';
+const USUARIO_TOKEN_PREFIX = 'cflow-usuario-';
 function getUnidadeIdFromRequest(req) {
     const auth = req.headers.authorization;
     const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
@@ -28,8 +31,36 @@ function getUnidadeIdFromRequest(req) {
 }
 let NotificacaoController = class NotificacaoController {
     notificacaoService;
-    constructor(notificacaoService) {
+    usuarioService;
+    constructor(notificacaoService, usuarioService) {
         this.notificacaoService = notificacaoService;
+        this.usuarioService = usuarioService;
+    }
+    async isAdmin(req) {
+        const auth = req.headers.authorization;
+        const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
+        if (token === ADMIN_TOKEN)
+            return true;
+        const match = token?.match(new RegExp(`^${USUARIO_TOKEN_PREFIX}(\\d+)$`));
+        if (match) {
+            try {
+                const usuario = await this.usuarioService.findOne(parseInt(match[1], 10));
+                return usuario.perfil === 'ADM';
+            }
+            catch {
+            }
+        }
+        return false;
+    }
+    async listChamados(req) {
+        const unidadeId = getUnidadeIdFromRequest(req);
+        if (unidadeId != null) {
+            return this.notificacaoService.findAllByUnidade(unidadeId);
+        }
+        if (await this.isAdmin(req)) {
+            return this.notificacaoService.findAll();
+        }
+        throw new common_1.UnauthorizedException('Acesso negado.');
     }
     listCategorias() {
         return this.notificacaoService.findAllCategorias();
@@ -52,6 +83,13 @@ let NotificacaoController = class NotificacaoController {
     }
 };
 exports.NotificacaoController = NotificacaoController;
+__decorate([
+    (0, common_1.Get)('chamados'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], NotificacaoController.prototype, "listChamados", null);
 __decorate([
     (0, common_1.Get)('categorias'),
     __metadata("design:type", Function),
@@ -90,6 +128,7 @@ __decorate([
 exports.NotificacaoController = NotificacaoController = __decorate([
     (0, common_1.Controller)('notificacoes'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    __metadata("design:paramtypes", [notificacao_service_1.NotificacaoService])
+    __metadata("design:paramtypes", [notificacao_service_1.NotificacaoService,
+        usuario_service_1.UsuarioService])
 ], NotificacaoController);
 //# sourceMappingURL=notificacao.controller.js.map

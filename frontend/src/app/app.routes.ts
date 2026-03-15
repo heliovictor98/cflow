@@ -10,6 +10,7 @@ import { UsuariosListPage } from './features/usuarios/usuarios-list.page';
 import { NotificacoesCategoriasPage } from './features/notificacoes/notificacoes-categorias.page';
 import { NotificacoesSubcategoriasPage } from './features/notificacoes/notificacoes-subcategorias.page';
 import { NotificacaoNovaPage } from './features/notificacoes/notificacao-nova.page';
+import { ChamadosListPage } from './features/notificacoes/chamados-list.page';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPage },
@@ -21,6 +22,7 @@ export const routes: Routes = [
       { path: 'home', component: HomePage },
       { path: 'definir-senha', component: DefinirSenhaPage },
       { path: 'notificacoes', component: NotificacoesCategoriasPage },
+      { path: 'notificacoes/chamados', component: ChamadosListPage },
       { path: 'notificacoes/categoria/:categoriaId', component: NotificacoesSubcategoriasPage },
       { path: 'notificacoes/categoria/:categoriaId/subcategoria/:subcategoriaId/novo', component: NotificacaoNovaPage },
       { path: 'unidades', component: UnidadesListPage, canActivate: [adminGuard] },
